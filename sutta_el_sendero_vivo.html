@@ -1,0 +1,1639 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SUTTA · El Sendero Vivo | Dharma y Atención Plena</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Cormorant Garamond (Elegancia contemplativa) & Inter (Legibilidad funcional) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['"Cormorant Garamond"', 'serif'],
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            // Paleta estética Zen: Tinta Sumi, Pergamino de Lino, Bambú y Ámbar Sagrado
+            sumi: {
+              800: '#22221f',
+              850: '#1a1a17',
+              900: '#141412',
+              950: '#0c0c0a',
+            },
+            linen: {
+              50: '#faf8f5',
+              100: '#f4efe6',
+              200: '#e8e1d3',
+              300: '#d7cbb6',
+              400: '#b8a58a',
+            },
+            bamboo: {
+              100: '#e5ebe6',
+              200: '#c5d5c7',
+              600: '#4a6b53',
+              700: '#3a5441',
+              800: '#2c3f31',
+              900: '#1e2b22',
+            },
+            amberZen: {
+              400: '#d8a956',
+              500: '#c49746',
+              600: '#a77c31',
+            },
+            vermilion: {
+              500: '#b85d43',
+              600: '#9e4a32',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    * {
+      transition: background-color 0.25s ease, border-color 0.25s ease, color 0.2s ease;
+    }
+    .zen-circle-pulse {
+      transition: transform 4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    /* Scrollbar minimalista estilo japonés */
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(184, 165, 138, 0.35);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(196, 151, 70, 0.6);
+    }
+  </style>
+</head>
+<body class="h-full bg-linen-50 text-sumi-900 dark:bg-sumi-950 dark:text-linen-100 font-sans selection:bg-linen-200 dark:selection:bg-sumi-800 flex flex-col antialiased">
+
+  <!-- ================= NOTIFICACIÓN TOAST SUTIL ================= -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 pointer-events-none transition-all duration-300 bg-sumi-900 text-linen-100 dark:bg-linen-100 dark:text-sumi-950 px-5 py-3 rounded-2xl shadow-2xl text-xs font-medium flex items-center space-x-3 border border-linen-300/30 dark:border-sumi-800">
+    <span id="toast-icon">☸️</span>
+    <span id="toast-msg">Atención despierta</span>
+  </div>
+
+  <!-- ================= CABECERA Y NAVEGACIÓN ================= -->
+  <header class="border-b border-linen-200 dark:border-sumi-800 bg-linen-50/90 dark:bg-sumi-950/90 backdrop-blur sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
+      
+      <!-- Logotipo: Círculo Ensō & Título -->
+      <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('daily')">
+        <div class="w-10 h-10 rounded-full border-2 border-dashed border-amberZen-500 flex items-center justify-center text-bamboo-600 dark:text-bamboo-200 font-serif font-bold text-lg shadow-sm">
+          ⭕
+        </div>
+        <div>
+          <span class="font-serif tracking-widest text-lg font-bold uppercase block leading-none">Sutta</span>
+          <span class="text-[10px] tracking-widest uppercase text-sumi-800/60 dark:text-linen-300 font-semibold">El Sendero del Dharma</span>
+        </div>
+      </div>
+
+      <!-- Menú Desktop -->
+      <nav class="hidden md:flex items-center space-x-1 text-xs font-semibold tracking-wider uppercase">
+        <button onclick="switchTab('daily')" id="nav-daily" class="nav-btn px-3 py-2 rounded-xl text-amberZen-600 dark:text-amberZen-400 font-bold bg-linen-100 dark:bg-sumi-850">
+          Sutta Vivo
+        </button>
+        <button onclick="switchTab('satipatthana')" id="nav-satipatthana" class="nav-btn px-3 py-2 rounded-xl text-sumi-800/70 dark:text-linen-300 hover:text-sumi-900 dark:hover:text-white">
+          Satipaṭṭhāna
+        </button>
+        <button onclick="switchTab('metta')" id="nav-metta" class="nav-btn px-3 py-2 rounded-xl text-sumi-800/70 dark:text-linen-300 hover:text-sumi-900 dark:hover:text-white">
+          Mettā
+        </button>
+        <button onclick="switchTab('anapana')" id="nav-anapana" class="nav-btn px-3 py-2 rounded-xl text-sumi-800/70 dark:text-linen-300 hover:text-sumi-900 dark:hover:text-white">
+          Ānāpānasati
+        </button>
+        <button onclick="switchTab('journal')" id="nav-journal" class="nav-btn px-3 py-2 rounded-xl text-sumi-800/70 dark:text-linen-300 hover:text-sumi-900 dark:hover:text-white">
+          Cuenco Vacío
+        </button>
+        <button onclick="switchTab('library')" id="nav-library" class="nav-btn px-3 py-2 rounded-xl text-sumi-800/70 dark:text-linen-300 hover:text-sumi-900 dark:hover:text-white">
+          Compendio
+        </button>
+      </nav>
+
+      <!-- Contador de Racha de Atención & Modo Oscuro -->
+      <div class="flex items-center space-x-3">
+        <!-- Racha Sīla/Atención -->
+        <div class="flex items-center space-x-1.5 bg-linen-100 dark:bg-sumi-850 border border-linen-200 dark:border-sumi-800 px-3 py-1.5 rounded-full text-xs" title="Días consecutivos recordando el despertar">
+          <span class="text-amberZen-500">🪷</span>
+          <span class="font-semibold text-sumi-900 dark:text-linen-200" id="streak-counter">0 días</span>
+        </div>
+
+        <!-- Modo Noche / Día -->
+        <button onclick="toggleDarkMode()" class="p-2 rounded-full hover:bg-linen-100 dark:hover:bg-sumi-850 text-sumi-800 dark:text-linen-300 focus:outline-none" aria-label="Cambiar iluminación">
+          <svg id="theme-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Menú Móvil con desplazamiento suave -->
+    <div class="flex md:hidden overflow-x-auto px-4 py-2 space-x-2 border-t border-linen-200 dark:border-sumi-800 text-xs uppercase tracking-wider font-semibold">
+      <button onclick="switchTab('daily')" id="mob-nav-daily" class="whitespace-nowrap px-3 py-1.5 rounded-lg bg-linen-200 dark:bg-sumi-850">Sutta Vivo</button>
+      <button onclick="switchTab('satipatthana')" id="mob-nav-satipatthana" class="whitespace-nowrap px-3 py-1.5 rounded-lg">Satipaṭṭhāna</button>
+      <button onclick="switchTab('metta')" id="mob-nav-metta" class="whitespace-nowrap px-3 py-1.5 rounded-lg">Mettā</button>
+      <button onclick="switchTab('anapana')" id="mob-nav-anapana" class="whitespace-nowrap px-3 py-1.5 rounded-lg">Respiración</button>
+      <button onclick="switchTab('journal')" id="mob-nav-journal" class="whitespace-nowrap px-3 py-1.5 rounded-lg">Cuenco Vacío</button>
+      <button onclick="switchTab('library')" id="mob-nav-library" class="whitespace-nowrap px-3 py-1.5 rounded-lg">Compendio</button>
+    </div>
+  </header>
+
+  <!-- ================= CONTENEDOR PRINCIPAL ================= -->
+  <main class="flex-1 max-w-5xl mx-auto w-full px-4 sm:px-6 py-8">
+
+    <!-- ================= SECCIÓN 1: SUTTA VIVO (PRÁCTICA DEL DÍA) ================= -->
+    <section id="view-daily" class="view-content space-y-8">
+      
+      <div class="text-center max-w-2xl mx-auto space-y-2">
+        <span class="text-xs uppercase tracking-widest text-amberZen-600 dark:text-amberZen-400 font-bold">La Enseñanza en Acción</span>
+        <h1 class="text-3xl sm:text-4xl font-serif font-bold text-sumi-900 dark:text-linen-100">Despertar a la Realidad Tal Cual Es</h1>
+        <p class="text-sm text-sumi-800/70 dark:text-linen-300">
+          «Como la lluvia no penetra en una casa bien techada, la pasión no invade una mente bien desarrollada.» — *Dhammapada 14*
+        </p>
+      </div>
+
+      <!-- Tarjeta del Sutta Activo -->
+      <div class="bg-white dark:bg-sumi-900 border border-linen-200 dark:border-sumi-800 rounded-3xl p-6 sm:p-10 shadow-sm relative overflow-hidden">
+        
+        <!-- Datos de Encabezado -->
+        <div class="flex items-center justify-between border-b border-linen-100 dark:border-sumi-800 pb-4 mb-6">
+          <div class="flex items-center space-x-2">
+            <span class="px-2.5 py-1 rounded-md text-xs font-mono font-bold bg-linen-100 dark:bg-sumi-850 text-bamboo-700 dark:text-bamboo-200" id="daily-sutta-ref">
+              Dhammapada 1
+            </span>
+            <span class="text-xs uppercase tracking-wider font-semibold text-amberZen-600 dark:text-amberZen-400" id="daily-sutta-canon">
+              Khuddaka Nikāya
+            </span>
+          </div>
+
+          <div class="flex items-center space-x-2">
+            <button onclick="pickRandomSutta()" class="text-xs text-sumi-800/60 dark:text-linen-400 hover:text-sumi-900 dark:hover:text-white flex items-center space-x-1 p-1" title="Invocar otra enseñanza">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+              <span class="hidden sm:inline">Inspirar otro</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Verso en Pāli y Traducción -->
+        <div class="space-y-4 text-center my-6">
+          <div class="text-2xl sm:text-3xl font-serif text-sumi-900 dark:text-linen-100 tracking-wide italic font-normal" id="daily-sutta-pali">
+            mano-pubbaṅgamā dhammā mano-seṭṭhā mano-mayā
+          </div>
+          <div class="text-xs tracking-widest text-sumi-800/50 dark:text-linen-400 font-mono" id="daily-sutta-phonetic">
+            [ mano pub-bang-gamaa dhammaa mano set-thaa mano-mayaa ]
+          </div>
+          <div class="text-xl sm:text-2xl font-serif text-amberZen-600 dark:text-amberZen-400 font-semibold max-w-2xl mx-auto pt-2" id="daily-sutta-translation">
+            «La mente precede a todos los fenómenos. La mente es su jefe; de la mente están hechos.»
+          </div>
+        </div>
+
+        <!-- Clave Psicológica y Micro-Práctica -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-linen-100 dark:border-sumi-800">
+          
+          <div class="bg-linen-50/70 dark:bg-sumi-950/40 p-5 rounded-2xl border border-linen-200/60 dark:border-sumi-800">
+            <h4 class="text-xs font-bold tracking-widest uppercase text-sumi-800/60 dark:text-linen-300 flex items-center space-x-2 mb-2">
+              <span>🧠</span>
+              <span>Clave Psicológica (Sin Dogmas)</span>
+            </h4>
+            <p class="text-sm leading-relaxed text-sumi-800 dark:text-linen-200" id="daily-sutta-psychology">
+              No experimentas el mundo como es objetivamente, sino como tu mente lo filtra e interpreta. La frustración y el sufrimiento no radican en el evento externo, sino en la historia reactiva que tu diálogo interno añade sobre él.
+            </p>
+          </div>
+
+          <div class="bg-bamboo-100/40 dark:bg-bamboo-900/20 p-5 rounded-2xl border border-bamboo-200/50 dark:border-bamboo-800/40">
+            <h4 class="text-xs font-bold tracking-widest uppercase text-bamboo-700 dark:text-bamboo-200 flex items-center space-x-2 mb-2">
+              <span>🌿</span>
+              <span>Micro-Práctica Conductual</span>
+            </h4>
+            <p class="text-sm leading-relaxed text-sumi-800 dark:text-linen-200" id="daily-sutta-action">
+              Hoy, en el instante en que notes irritación, detente 3 segundos antes de responder. Pregúntate: «¿Qué interpretación automática de mi mente está encendiendo este fuego?». Deja caer la historia y responde solo a los hechos.
+            </p>
+          </div>
+
+        </div>
+
+        <!-- Botones de Acción -->
+        <div class="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 pt-4">
+          <button id="btn-mark-lived" onclick="markLivedToday()" class="w-full sm:w-auto px-6 py-3 rounded-2xl bg-bamboo-700 hover:bg-bamboo-800 text-white font-medium text-xs uppercase tracking-wider flex items-center justify-center space-x-2 shadow-sm transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            <span id="btn-lived-text">Encarnar esta práctica hoy</span>
+          </button>
+
+          <div class="flex items-center space-x-3 w-full sm:w-auto">
+            <button onclick="openNoteModal()" class="w-full sm:w-auto px-4 py-3 rounded-2xl border border-linen-300 dark:border-sumi-700 hover:bg-linen-100 dark:hover:bg-sumi-850 text-xs uppercase tracking-wider font-semibold flex items-center justify-center space-x-2">
+              <span>🪞</span>
+              <span>Anotar en el Cuenco</span>
+            </button>
+            <button onclick="shareSuttaText()" class="px-4 py-3 rounded-2xl border border-linen-300 dark:border-sumi-700 hover:bg-linen-100 dark:hover:bg-sumi-850 text-xs font-semibold flex items-center justify-center" title="Copiar sutta y práctica">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Los Tres Sellos de la Existencia (Tilakkhaṇa) -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+        <div class="p-5 rounded-2xl bg-white/70 dark:bg-sumi-900/60 border border-linen-200 dark:border-sumi-800">
+          <div class="text-amberZen-500 font-serif text-2xl font-bold mb-1">Anicca</div>
+          <div class="text-xs font-bold uppercase tracking-wider text-sumi-800/60 dark:text-linen-300 mb-1">Impermanencia</div>
+          <p class="text-xs text-sumi-800/80 dark:text-linen-300">Todo lo que surge, cesa. Ningún pensamiento o dolor dura eternamente.</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-white/70 dark:bg-sumi-900/60 border border-linen-200 dark:border-sumi-800">
+          <div class="text-amberZen-500 font-serif text-2xl font-bold mb-1">Dukkha</div>
+          <div class="text-xs font-bold uppercase tracking-wider text-sumi-800/60 dark:text-linen-300 mb-1">Aferramiento / Fricción</div>
+          <p class="text-xs text-sumi-800/80 dark:text-linen-300">El sufrimiento nace de exigirle solidez a lo que fluye y cambia sin cesar.</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-white/70 dark:bg-sumi-900/60 border border-linen-200 dark:border-sumi-800">
+          <div class="text-amberZen-500 font-serif text-2xl font-bold mb-1">Anattā</div>
+          <div class="text-xs font-bold uppercase tracking-wider text-sumi-800/60 dark:text-linen-300 mb-1">No-Yo / Vacuidad</div>
+          <p class="text-xs text-sumi-800/80 dark:text-linen-300">Tú no eres el contenido de tu mente; eres el espacio libre donde acontece.</p>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ================= SECCIÓN 2: LABORATORIO SATIPAṬṬHĀNA ================= -->
+    <section id="view-satipatthana" class="view-content hidden space-y-6">
+      
+      <div class="max-w-2xl mx-auto text-center space-y-2">
+        <span class="text-xs uppercase tracking-widest text-amberZen-600 dark:text-amberZen-400 font-bold">Majjhima Nikāya 10 · Satipaṭṭhāna Sutta</span>
+        <h2 class="text-3xl font-serif font-bold">Las 4 Bases de la Atención Plena</h2>
+        <p class="text-sm text-sumi-800/70 dark:text-linen-300">
+          El único camino directo hacia la purificación de la mente y la liberación del dolor: observar los 4 fundamentos sin apego ni aversión.
+        </p>
+      </div>
+
+      <div class="max-w-2xl mx-auto bg-white dark:bg-sumi-900 border border-linen-200 dark:border-sumi-800 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
+        
+        <!-- Indicador de pasos -->
+        <div class="grid grid-cols-4 gap-2 text-center border-b border-linen-100 dark:border-sumi-800 pb-4">
+          <button onclick="setSatiStep(1)" id="sati-tab-1" class="py-2 text-xs font-bold uppercase tracking-wider border-b-2 border-bamboo-600 text-bamboo-700 dark:text-bamboo-300">
+            1. Kāya (Cuerpo)
+          </button>
+          <button onclick="setSatiStep(2)" id="sati-tab-2" class="py-2 text-xs font-bold uppercase tracking-wider text-sumi-800/50 dark:text-linen-400">
+            2. Vedanā (Tono)
+          </button>
+          <button onclick="setSatiStep(3)" id="sati-tab-3" class="py-2 text-xs font-bold uppercase tracking-wider text-sumi-800/50 dark:text-linen-400">
+            3. Citta (Mente)
+          </button>
+          <button onclick="setSatiStep(4)" id="sati-tab-4" class="py-2 text-xs font-bold uppercase tracking-wider text-sumi-800/50 dark:text-linen-400">
+            4. Dhammā (Vacío)
+          </button>
+        </div>
+
+        <!-- Paso 1: Kāya (Cuerpo y respiración) -->
+        <div id="sati-step-1" class="space-y-4">
+          <div class="border-l-4 border-bamboo-600 pl-4 py-1">
+            <h3 class="font-bold text-base">1. Kāya: El Ancla en el Cuerpo Físico</h3>
+            <p class="text-xs text-sumi-800/60 dark:text-linen-300">«Al inhalar largo, discierne: 'Inhalo largo'. Al exhalar largo, discierne: 'Exhalo largo'.»</p>
+          </div>
+          <div class="p-4 bg-linen-50 dark:bg-sumi-950/40 rounded-2xl text-xs space-y-2 text-sumi-800 dark:text-linen-200">
+            <p>• Suelta los hombros y afloja la lengua contra el paladar.</p>
+            <p>• Siente el contacto de tus pies con el suelo o el peso de tus caderas sobre el asiento.</p>
+            <p>• ¿Qué tensión física innecesaria estás sosteniendo en este instante?</p>
+          </div>
+          <input type="text" id="sati-input-kaya" placeholder="Ej: Noto tensión en el cuello y respiración superficial en el pecho..." class="w-full bg-linen-50 dark:bg-sumi-950 border border-linen-200 dark:border-sumi-700 rounded-2xl p-4 text-sm focus:outline-none focus:ring-2 focus:ring-bamboo-600">
+          
+          <div class="flex justify-end pt-2">
+            <button onclick="setSatiStep(2)" class="px-6 py-2.5 bg-sumi-900 text-white dark:bg-linen-100 dark:text-sumi-950 rounded-xl text-xs font-bold uppercase tracking-wider">
+              Continuar a Vedanā →
+            </button>
+          </div>
+        </div>
+
+        <!-- Paso 2: Vedanā (Sensación / Tono Afectivo) -->
+        <div id="sati-step-2" class="space-y-4 hidden">
+          <div class="border-l-4 border-amberZen-500 pl-4 py-1">
+            <h3 class="font-bold text-base">2. Vedanā: El Tono Afectivo Inmediato</h3>
+            <p class="text-xs text-sumi-800/60 dark:text-linen-300">Antes del pensamiento, surge una sensación primaria. Identifícala sin apego ni rechazo.</p>
+          </div>
+
+          <div class="grid grid-cols-3 gap-3">
+            <button onclick="selectVedana('Sukha (Placentera)')" id="vedana-btn-sukha" class="p-4 rounded-2xl border border-linen-200 dark:border-sumi-700 text-center hover:border-bamboo-600 focus:outline-none">
+              <div class="text-2xl mb-1">🌸</div>
+              <div class="text-xs font-bold">Sukha</div>
+              <div class="text-[10px] text-sumi-800/60 dark:text-linen-300">Agradable / Placentero</div>
+            </button>
+            <button onclick="selectVedana('Dukkha (Desagradable)')" id="vedana-btn-dukkha" class="p-4 rounded-2xl border border-linen-200 dark:border-sumi-700 text-center hover:border-vermilion-500 focus:outline-none">
+              <div class="text-2xl mb-1">⚡</div>
+              <div class="text-xs font-bold">Dukkha</div>
+              <div class="text-[10px] text-sumi-800/60 dark:text-linen-300">Desagradable / Fricción</div>
+            </button>
+            <button onclick="selectVedana('Adukkhamasukkha (Neutra)')" id="vedana-btn-neutral" class="p-4 rounded-2xl border border-linen-200 dark:border-sumi-700 text-center hover:border-amberZen-500 focus:outline-none">
+              <div class="text-2xl mb-1">🍃</div>
+              <div class="text-xs font-bold">Neutra</div>
+              <div class="text-[10px] text-sumi-800/60 dark:text-linen-300">Ni placer ni dolor</div>
+            </button>
+          </div>
+
+          <p id="vedana-feedback" class="text-xs text-amberZen-600 dark:text-amberZen-400 font-medium italic text-center">
+            Selecciona una sensación para notar si tu mente busca atraparla o escapar de ella.
+          </p>
+
+          <div class="flex justify-between pt-2">
+            <button onclick="setSatiStep(1)" class="px-4 py-2 border border-linen-300 dark:border-sumi-700 rounded-xl text-xs uppercase font-semibold">
+              ← Atrás
+            </button>
+            <button onclick="setSatiStep(3)" class="px-6 py-2.5 bg-sumi-900 text-white dark:bg-linen-100 dark:text-sumi-950 rounded-xl text-xs font-bold uppercase tracking-wider">
+              Continuar a Citta →
+            </button>
+          </div>
+        </div>
+
+        <!-- Paso 3: Citta (Estado de la Mente) -->
+        <div id="sati-step-3" class="space-y-4 hidden">
+          <div class="border-l-4 border-bamboo-600 pl-4 py-1">
+            <h3 class="font-bold text-base">3. Citta: Notar la Calidad de la Mente</h3>
+            <p class="text-xs text-sumi-800/60 dark:text-linen-300">«Discierne la mente con deseo como mente con deseo; discierne la mente en calma como mente en calma.»</p>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3 text-xs">
+            <button onclick="selectCittaState('Sarāga (Apegada / Buscando)')" class="citta-tag-btn p-3 rounded-xl border border-linen-200 dark:border-sumi-700 text-left hover:bg-linen-100 dark:hover:bg-sumi-850">
+              🧲 <strong>Sarāga:</strong> Con apego o sed de que algo pase.
+            </button>
+            <button onclick="selectCittaState('Sadosa (Aversión / Molestia)')" class="citta-tag-btn p-3 rounded-xl border border-linen-200 dark:border-sumi-700 text-left hover:bg-linen-100 dark:hover:bg-sumi-850">
+              🔥 <strong>Sadosa:</strong> Con queja, aversión o molestia.
+            </button>
+            <button onclick="selectCittaState('Samoha (Dispersa / Niebla)')" class="citta-tag-btn p-3 rounded-xl border border-linen-200 dark:border-sumi-700 text-left hover:bg-linen-100 dark:hover:bg-sumi-850">
+              🌫️ <strong>Samoha:</strong> Rumiante, confusa o somnolienta.
+            </button>
+            <button onclick="selectCittaState('Samāhita (Recogida / Clara)')" class="citta-tag-btn p-3 rounded-xl border border-linen-200 dark:border-sumi-700 text-left hover:bg-linen-100 dark:hover:bg-sumi-850">
+              💧 <strong>Samāhita:</strong> Espaciosa, receptiva y calma.
+            </button>
+          </div>
+
+          <div id="citta-selection-display" class="text-xs font-semibold text-bamboo-700 dark:text-bamboo-300">
+            Estado seleccionado: Mente abierta a la auto-observación
+          </div>
+
+          <div class="flex justify-between pt-2">
+            <button onclick="setSatiStep(2)" class="px-4 py-2 border border-linen-300 dark:border-sumi-700 rounded-xl text-xs uppercase font-semibold">
+              ← Atrás
+            </button>
+            <button onclick="setSatiStep(4)" class="px-6 py-2.5 bg-sumi-900 text-white dark:bg-linen-100 dark:text-sumi-950 rounded-xl text-xs font-bold uppercase tracking-wider">
+              Reconocer y Soltar (Dhammā) →
+            </button>
+          </div>
+        </div>
+
+        <!-- Paso 4: Dhammā (Obstáculos y Vaciamiento en Suññatā) -->
+        <div id="sati-step-4" class="space-y-4 hidden">
+          <div class="border-l-4 border-amberZen-500 pl-4 py-1">
+            <h3 class="font-bold text-base">4. Dhammā: Desidentificación y Vaciamiento</h3>
+            <p class="text-xs text-sumi-800/60 dark:text-linen-300">Cualquier fenómeno que surja no te define. No es tuyo, no eres tú, no es tu yo (*Anattā*).</p>
+          </div>
+
+          <div class="bg-linen-100 dark:bg-sumi-850 p-4 rounded-2xl text-xs space-y-2">
+            <span class="font-bold uppercase tracking-wider text-amberZen-600 dark:text-amberZen-400">Veredicto del Testigo:</span>
+            <p id="sati-final-summary" class="text-sumi-800 dark:text-linen-200">
+              Observas el cuerpo, la sensación y el estado mental sin identificarte con ellos. Al no alimentar la rueda (*Saṃsāra*), la agitación se disuelve por sí sola.
+            </p>
+          </div>
+
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
+            <button onclick="setSatiStep(3)" class="w-full sm:w-auto px-4 py-2 border border-linen-300 dark:border-sumi-700 rounded-xl text-xs uppercase font-semibold">
+              ← Atrás
+            </button>
+            <button onclick="saveSatipatthanaToJournal()" class="w-full sm:w-auto px-6 py-2.5 bg-bamboo-700 hover:bg-bamboo-800 text-white rounded-xl text-xs font-bold uppercase tracking-wider shadow">
+              🕊️ Soltar en la Vacuidad & Guardar
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ================= SECCIÓN 3: METTĀ BHĀVANĀ (AMOR BENEVOLENTE) ================= -->
+    <section id="view-metta" class="view-content hidden space-y-6">
+      
+      <div class="max-w-2xl mx-auto text-center space-y-2">
+        <span class="text-xs uppercase tracking-widest text-amberZen-600 dark:text-amberZen-400 font-bold">Koraṇīya Mettā Sutta</span>
+        <h2 class="text-3xl font-serif font-bold">Mettā Bhāvanā: Amor Inconmensurable</h2>
+        <p class="text-sm text-sumi-800/70 dark:text-linen-300">
+          «Como una madre protege a su único hijo arriesgando su propia vida, cultiva un corazón sin límites hacia todos los seres.»
+        </p>
+      </div>
+
+      <div class="max-w-xl mx-auto bg-white dark:bg-sumi-900 border border-linen-200 dark:border-sumi-800 rounded-3xl p-6 sm:p-10 shadow-sm text-center relative space-y-6">
+        
+        <!-- Círculos concéntricos de irradiación -->
+        <div class="flex justify-center flex-wrap gap-1.5 text-xs font-semibold">
+          <button onclick="setMettaStage(0)" id="metta-stage-0" class="metta-btn px-3 py-1 rounded-full border border-amberZen-500 bg-amberZen-500 text-white">1. Hacia ti mismo</button>
+          <button onclick="setMettaStage(1)" id="metta-stage-1" class="metta-btn px-3 py-1 rounded-full border border-linen-300 dark:border-sumi-700 text-sumi-800/70 dark:text-linen-300">2. Benefactor</button>
+          <button onclick="setMettaStage(2)" id="metta-stage-2" class="metta-btn px-3 py-1 rounded-full border border-linen-300 dark:border-sumi-700 text-sumi-800/70 dark:text-linen-300">3. Neutro</button>
+          <button onclick="setMettaStage(3)" id="metta-stage-3" class="metta-btn px-3 py-1 rounded-full border border-linen-300 dark:border-sumi-700 text-sumi-800/70 dark:text-linen-300">4. Persona difícil</button>
+          <button onclick="setMettaStage(4)" id="metta-stage-4" class="metta-btn px-3 py-1 rounded-full border border-linen-300 dark:border-sumi-700 text-sumi-800/70 dark:text-linen-300">5. Todos los seres</button>
+        </div>
+
+        <!-- Orbe Cálido Radiante -->
+        <div class="relative w-48 h-48 mx-auto my-4 flex items-center justify-center">
+          <div id="metta-glow" class="absolute inset-0 rounded-full bg-amberZen-400/20 dark:bg-amberZen-500/10 blur-2xl animate-pulse"></div>
+          <div class="w-36 h-36 rounded-full bg-gradient-to-tr from-amberZen-500 to-vermilion-500 flex items-center justify-center text-white shadow-xl">
+            <span id="metta-target-symbol" class="text-4xl">🪷</span>
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <h3 id="metta-stage-title" class="font-serif text-xl font-bold text-sumi-900 dark:text-linen-100">
+            Fase 1: Cultivar bondad hacia ti mismo
+          </h3>
+          <p id="metta-stage-instruction" class="text-xs text-sumi-800/60 dark:text-linen-400 max-w-md mx-auto">
+            No puedes ofrecer una paz que no te permitas recibir. Reconoce tu anhelo innato de estar a salvo y en paz.
+          </p>
+
+          <!-- Frases tradicionales adaptadas -->
+          <div class="bg-linen-50 dark:bg-sumi-950/60 p-5 rounded-2xl border border-linen-200 dark:border-sumi-800 space-y-2 text-sm italic font-serif text-sumi-900 dark:text-linen-200" id="metta-phrases">
+            <p>«Que esté libre de peligros internos y externos.»</p>
+            <p>«Que mi cuerpo tenga salud y mi mente serenidad.»</p>
+            <p>«Que pueda vivir con facilidad y bondad hacia mis límites.»</p>
+          </div>
+        </div>
+
+        <!-- Controles de Mettā -->
+        <div class="flex items-center justify-center space-x-3 pt-2">
+          <button onclick="prevMettaStage()" class="px-4 py-2 border border-linen-300 dark:border-sumi-700 rounded-xl text-xs uppercase font-semibold">
+            ← Anterior
+          </button>
+          <button onclick="ringZenBell(528)" class="px-5 py-2.5 bg-amberZen-500 hover:bg-amberZen-600 text-white rounded-xl text-xs font-bold uppercase tracking-wider shadow">
+            Irradiar con Campana 🔔
+          </button>
+          <button onclick="nextMettaStage()" class="px-4 py-2 border border-linen-300 dark:border-sumi-700 rounded-xl text-xs uppercase font-semibold">
+            Siguiente →
+          </button>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ================= SECCIÓN 4: RESPIRADOR ĀNĀPĀNASATI ================= -->
+    <section id="view-anapana" class="view-content hidden space-y-6">
+      
+      <div class="max-w-2xl mx-auto text-center space-y-2">
+        <span class="text-xs uppercase tracking-widest text-amberZen-600 dark:text-amberZen-400 font-bold">Majjhima Nikāya 118 · Ānāpānasati</span>
+        <h2 class="text-3xl font-serif font-bold">La Atención a la Respiración Consciente</h2>
+        <p class="text-sm text-sumi-800/70 dark:text-linen-300">
+          Aquietar las formaciones corporales y mentales mediante el ritmo sereno de la respiración.
+        </p>
+      </div>
+
+      <div class="max-w-xl mx-auto bg-white dark:bg-sumi-900 border border-linen-200 dark:border-sumi-800 rounded-3xl p-6 sm:p-10 text-center shadow-sm relative">
+        
+        <!-- Modos de Respiración -->
+        <div class="flex justify-center space-x-2 mb-8">
+          <button onclick="setAnapanaMode('samatha')" id="anapana-btn-samatha" class="px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider border border-bamboo-600 bg-bamboo-100/50 dark:bg-bamboo-900/30 text-bamboo-800 dark:text-bamboo-200">
+            Samatha (4-4-6-2)
+          </button>
+          <button onclick="setAnapanaMode('vipassana')" id="anapana-btn-vipassana" class="px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider border border-linen-300 dark:border-sumi-700 text-sumi-800/70 dark:text-linen-400 hover:bg-linen-100">
+            Vipassanā (Fluir)
+          </button>
+          <button onclick="setAnapanaMode('peace')" id="anapana-btn-peace" class="px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider border border-linen-300 dark:border-sumi-700 text-sumi-800/70 dark:text-linen-400 hover:bg-linen-100">
+            Paz 4-7-8
+          </button>
+        </div>
+
+        <!-- Círculo Ensō Visual de Respiración -->
+        <div class="relative w-64 h-64 mx-auto my-6 flex items-center justify-center">
+          <!-- Anillo Ensō decorativo -->
+          <div class="absolute inset-0 rounded-full border border-dashed border-linen-300 dark:border-sumi-800 animate-spin" style="animation-duration: 60s;"></div>
+          <div id="anapana-aura" class="absolute w-44 h-44 rounded-full bg-bamboo-200/40 dark:bg-bamboo-900/20 blur-xl"></div>
+          
+          <div id="anapana-orb" class="zen-circle-pulse w-32 h-32 rounded-full bg-gradient-to-tr from-bamboo-700 via-bamboo-600 to-amberZen-500 shadow-2xl flex items-center justify-center transform scale-100 text-white">
+            <span id="anapana-phase-text" class="font-serif text-lg tracking-wider font-semibold">Presente</span>
+          </div>
+        </div>
+
+        <!-- Contador y Frase del Sutra -->
+        <div class="space-y-1 mb-8">
+          <div id="anapana-counter" class="text-4xl font-serif font-bold text-sumi-900 dark:text-linen-100">0</div>
+          <div id="anapana-instruction" class="text-xs uppercase tracking-widest text-sumi-800/60 dark:text-linen-400 font-semibold">Pulsa Iniciar para armonizar</div>
+          <div id="anapana-cycles" class="text-xs text-sumi-800/40 dark:text-linen-500 pt-1">Ciclos conscientes: 0</div>
+        </div>
+
+        <!-- Controles & Sonido Zen Procedural -->
+        <div class="flex items-center justify-center space-x-4">
+          <button id="anapana-start-btn" onclick="toggleAnapanaSession()" class="px-8 py-3 bg-sumi-900 text-linen-100 dark:bg-linen-100 dark:text-sumi-950 rounded-2xl text-xs font-bold uppercase tracking-widest hover:opacity-90 shadow">
+            Iniciar Práctica
+          </button>
+          
+          <button onclick="toggleAudioMute()" id="audio-zen-btn" class="p-3 border border-linen-300 dark:border-sumi-700 rounded-2xl hover:bg-linen-100 dark:hover:bg-sumi-850 text-sumi-800 dark:text-linen-300" title="Sonido de cuenco/campana zen">
+            <span id="audio-zen-icon">🔔</span>
+          </button>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ================= SECCIÓN 5: DIARIO DEL TESTIGO Y CUENCO VACÍO ================= -->
+    <section id="view-journal" class="view-content hidden space-y-6">
+      
+      <div class="max-w-2xl mx-auto text-center space-y-2">
+        <span class="text-xs uppercase tracking-widest text-amberZen-600 dark:text-amberZen-400 font-bold">Suññatā · Vaciar el Contenedor</span>
+        <h2 class="text-3xl font-serif font-bold">El Cuenco Vacío de la Consciencia</h2>
+        <p class="text-sm text-sumi-800/70 dark:text-linen-300">
+          Un cuenco lleno no puede recibir nada nuevo. Escribe tus apegos, juicios o temores y déjalos caer en la vacuidad.
+        </p>
+      </div>
+
+      <!-- Formulario para Soltar -->
+      <div class="bg-white dark:bg-sumi-900 border border-linen-200 dark:border-sumi-800 rounded-3xl p-6 sm:p-8 shadow-sm space-y-5">
+        <h3 class="font-serif text-xl font-bold border-b border-linen-100 dark:border-sumi-800 pb-3 flex items-center justify-between">
+          <span>Ofrenda al Vacío</span>
+          <span class="text-xs font-sans font-normal text-sumi-800/50 dark:text-linen-400" id="journal-today-date">Hoy</span>
+        </h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs uppercase tracking-wider font-bold text-sumi-800/60 dark:text-linen-300 mb-1">1. ¿Qué fenómeno o situación observas?</label>
+            <input type="text" id="empty-situation" placeholder="Ej: Preocupación por una reunión laboral / Conversación tensa..." class="w-full bg-linen-50 dark:bg-sumi-950 border border-linen-200 dark:border-sumi-700 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amberZen-500">
+          </div>
+          <div>
+            <label class="block text-xs uppercase tracking-wider font-bold text-sumi-800/60 dark:text-linen-300 mb-1">Sello Filosófico de Liberación</label>
+            <select id="empty-seal" class="w-full bg-linen-50 dark:bg-sumi-950 border border-linen-200 dark:border-sumi-700 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amberZen-500">
+              <option value="Anicca (Esto también pasará)">Anicca (Esto es transitorio y pasará)</option>
+              <option value="Anattā (No soy este pensamiento)">Anattā (No soy este pensamiento / desidentificación)</option>
+              <option value="Dukkha (Suelto el aferramiento)">Dukkha (Suelto el intento de controlar lo incontrolable)</option>
+              <option value="Upekkhā (Ecuanimidad radiante)">Upekkhā (Miro con ecuanimidad y sin juicio)</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs uppercase tracking-wider font-bold text-vermilion-600 dark:text-vermilion-500 mb-1">2. ¿Qué apego, miedo o expectativa sueltas en el cuenco?</label>
+          <textarea id="empty-attachment" rows="2" placeholder="Ej: Suelto la necesidad de tener razón y de controlar la opinión ajena..." class="w-full bg-linen-50 dark:bg-sumi-950 border border-linen-200 dark:border-sumi-700 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-vermilion-500 resize-none"></textarea>
+        </div>
+
+        <div>
+          <label class="block text-xs uppercase tracking-wider font-bold text-bamboo-700 dark:text-bamboo-300 mb-1">3. Discernimiento Lúcido (*Paññā*) / La Mente Espaciosa</label>
+          <textarea id="empty-insight" rows="2" placeholder="Ej: Descanso en la quietud presente. La vida fluye sin necesidad de que mi ego la dirija..." class="w-full bg-linen-50 dark:bg-sumi-950 border border-linen-200 dark:border-sumi-700 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-bamboo-600 resize-none"></textarea>
+        </div>
+
+        <div class="flex justify-end pt-2">
+          <button onclick="saveEmptyBowlEntry()" class="px-6 py-2.5 rounded-xl bg-sumi-900 text-white dark:bg-linen-100 dark:text-sumi-950 text-xs font-bold uppercase tracking-wider shadow hover:opacity-90">
+            Vaciar en el Cuenco
+          </button>
+        </div>
+      </div>
+
+      <!-- Barra de Filtros y Descargas -->
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4">
+        <div class="flex items-center space-x-2 w-full sm:w-auto">
+          <input type="text" id="journal-filter-input" oninput="renderJournal()" placeholder="Buscar en el cuenco..." class="bg-white dark:bg-sumi-900 border border-linen-200 dark:border-sumi-800 rounded-xl px-4 py-2 text-xs focus:outline-none w-full sm:w-64">
+        </div>
+        <div class="flex items-center space-x-2 w-full sm:w-auto justify-end">
+          <button onclick="exportBowlJSON()" class="px-3 py-2 border border-linen-300 dark:border-sumi-700 rounded-xl text-xs font-semibold hover:bg-linen-100 dark:hover:bg-sumi-850">
+            Exportar JSON
+          </button>
+          <button onclick="exportBowlTXT()" class="px-3 py-2 border border-linen-300 dark:border-sumi-700 rounded-xl text-xs font-semibold hover:bg-linen-100 dark:hover:bg-sumi-850">
+            Descargar Texto
+          </button>
+        </div>
+      </div>
+
+      <!-- Lista de Entradas -->
+      <div id="journal-list" class="space-y-4">
+        <!-- Rellenado por JavaScript -->
+      </div>
+
+    </section>
+
+    <!-- ================= SECCIÓN 6: COMPENDIO Y BIBLIOTECA DE SUTTAS ================= -->
+    <section id="view-library" class="view-content hidden space-y-6">
+      
+      <div class="max-w-2xl mx-auto text-center space-y-2">
+        <span class="text-xs uppercase tracking-widest text-amberZen-600 dark:text-amberZen-400 font-bold">Tipiṭaka & Mahāyāna</span>
+        <h2 class="text-3xl font-serif font-bold">Biblioteca de Suttas para la Vida Real</h2>
+        <p class="text-sm text-sumi-800/70 dark:text-linen-300">
+          Enseñanzas traducidas con rigor y aterrizadas en prácticas directas para el mundo cotidiano.
+        </p>
+      </div>
+
+      <!-- Categorías de Filtrado -->
+      <div class="flex flex-wrap items-center justify-center gap-2 max-w-3xl mx-auto">
+        <button onclick="filterSuttas('all')" class="sutta-cat-btn px-3 py-1.5 rounded-full text-xs font-semibold border border-linen-300 dark:border-sumi-700 bg-sumi-900 text-white dark:bg-linen-100 dark:text-sumi-950" data-category="all">Todos</button>
+        <button onclick="filterSuttas('mente')" class="sutta-cat-btn px-3 py-1.5 rounded-full text-xs font-semibold border border-linen-300 dark:border-sumi-700 text-sumi-800/70 dark:text-linen-400 hover:bg-linen-100" data-category="mente">Mente & Pensamiento (Dhammapada)</button>
+        <button onclick="filterSuttas('atencion')" class="sutta-cat-btn px-3 py-1.5 rounded-full text-xs font-semibold border border-linen-300 dark:border-sumi-700 text-sumi-800/70 dark:text-linen-400 hover:bg-linen-100" data-category="atencion">Atención Plena (Satipaṭṭhāna)</button>
+        <button onclick="filterSuttas('vacuidad')" class="sutta-cat-btn px-3 py-1.5 rounded-full text-xs font-semibold border border-linen-300 dark:border-sumi-700 text-sumi-800/70 dark:text-linen-400 hover:bg-linen-100" data-category="vacuidad">No-Yo & Vacuidad (Anattā / Corazón)</button>
+        <button onclick="filterSuttas('amor')" class="sutta-cat-btn px-3 py-1.5 rounded-full text-xs font-semibold border border-linen-300 dark:border-sumi-700 text-sumi-800/70 dark:text-linen-400 hover:bg-linen-100" data-category="amor">Mettā & Relaciones</button>
+        <button onclick="filterSuttas('libertad')" class="sutta-cat-btn px-3 py-1.5 rounded-full text-xs font-semibold border border-linen-300 dark:border-sumi-700 text-sumi-800/70 dark:text-linen-400 hover:bg-linen-100" data-category="libertad">Discernimiento & Libertad (Kalama)</button>
+      </div>
+
+      <!-- Buscador -->
+      <div class="max-w-md mx-auto">
+        <input type="text" id="sutta-search-input" oninput="searchSuttas()" placeholder="Buscar por pali, español, concepto..." class="w-full bg-white dark:bg-sumi-900 border border-linen-200 dark:border-sumi-800 rounded-2xl px-4 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-amberZen-500">
+      </div>
+
+      <!-- Cuadrícula de Suttas -->
+      <div id="suttas-grid" class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-4">
+        <!-- Inyección por JavaScript -->
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ================= MODAL DE NOTA RÁPIDA ================= -->
+  <div id="modal-note" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm hidden">
+    <div class="bg-white dark:bg-sumi-900 border border-linen-200 dark:border-sumi-800 w-full max-w-lg rounded-3xl p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-linen-100 dark:border-sumi-800 pb-3">
+        <h3 class="font-serif text-lg font-bold">Depositar en el Cuenco</h3>
+        <button onclick="closeNoteModal()" class="text-sumi-800/50 hover:text-sumi-900 text-xl font-bold">&times;</button>
+      </div>
+      <p class="text-xs text-sumi-800/60 dark:text-linen-400" id="modal-sutta-ref-text">
+        Inspirado en la enseñanza activa.
+      </p>
+      <textarea id="modal-note-text" rows="4" class="w-full bg-linen-50 dark:bg-sumi-950 border border-linen-200 dark:border-sumi-700 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-amberZen-500 resize-none" placeholder="¿Qué verdad experimentas en este instante al soltar tus exigencias a la realidad?"></textarea>
+      
+      <div class="flex justify-end space-x-2 pt-2">
+        <button onclick="closeNoteModal()" class="px-4 py-2 border border-linen-300 dark:border-sumi-700 rounded-xl text-xs uppercase font-semibold">Cancelar</button>
+        <button onclick="saveModalNote()" class="px-5 py-2 bg-bamboo-700 hover:bg-bamboo-800 text-white rounded-xl text-xs font-bold uppercase tracking-wider">Guardar Ofrenda</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= PIE DE PÁGINA ================= -->
+  <footer class="border-t border-linen-200 dark:border-sumi-800 mt-12 py-8 text-center text-xs text-sumi-800/60 dark:text-linen-400">
+    <div class="max-w-4xl mx-auto px-4 space-y-2">
+      <div class="font-serif italic text-sm text-sumi-900 dark:text-linen-200">
+        «Sabbe dhammā anattā» — Todos los fenómenos carecen de un yo sustancial. Descansa en la paz de lo que es.
+      </div>
+      <p>SUTTA · Código abierto sin dependencias, 100% privado en tu navegador.</p>
+    </div>
+  </footer>
+
+  <!-- ================= SCRIPT: LÓGICA Y AUDIO ZEN ================= -->
+  <script>
+    /* =====================================================================
+       BASE DE DATOS: SUTTAS CLÁSICOS Y GUÍA DE ENCARNACIÓN
+       ===================================================================== */
+    const SUTTAS_DATA = [
+      {
+        id: "dhp-1",
+        canon: "Khuddaka Nikāya",
+        ref: "Dhammapada 1",
+        category: "mente",
+        pali: "mano-pubbaṅgamā dhammā mano-seṭṭhā mano-mayā",
+        phonetic: "mano pub-bang-gamaa dhammaa mano set-thaa mano-mayaa",
+        translation: "La mente precede a todos los fenómenos. La mente es su jefe; de la mente están hechos.",
+        psychology: "No experimentas el mundo como es objetivamente, sino como tu mente lo interpreta. La frustración y la paz no residen en los acontecimientos externos, sino en el relato que tu mente fabrica sobre ellos.",
+        action: "Cada vez que hoy sientas un impulso de rabia o prisa, haz una pausa de 3 segundos y pregúntate: «¿Qué juicio automático de mi mente está encendiendo este fuego?». Despega el hecho del relato."
+      },
+      {
+        id: "dhp-5",
+        canon: "Khuddaka Nikāya",
+        ref: "Dhammapada 5",
+        category: "amor",
+        pali: "na hi verena verāni sammantīdha kudācanaṁ, averena ca sammanti esa dhammo sanantano",
+        phonetic: "na hi verena veraani sammanteedha kudaachanam, averena cha sammanti esa dhammo sanantano",
+        translation: "El odio nunca cesa mediante el odio en este mundo; solo cesa mediante el no-odio (amor). Esta es una ley eterna.",
+        psychology: "Reaccionar con hostilidad ante la hostilidad solo multiplica la toxicidad. El perdón y la serenidad no son debilidad, sino la única fuerza con la capacidad de cortar la cadena de transmisión del dolor.",
+        action: "Si alguien te habla hoy con brusquedad o frialdad, no devuelvas el impacto. Respira y di en silencio: «Que estés libre de la confusión que te hace sufrir». Responde desde la calma neutral."
+      },
+      {
+        id: "mn-10",
+        canon: "Majjhima Nikāya",
+        ref: "Satipaṭṭhāna Sutta (MN 10)",
+        category: "atencion",
+        pali: "kāye kāyānupassī viharati ātāpī sampajāno satimā",
+        phonetic: "kaaye kaayaanupassee viharati aataapee sampajaano satimaa",
+        translation: "Mora contemplando el cuerpo en el cuerpo, ardiente, plenamente consciente y atento, despojándose del anhelo y la aflicción hacia el mundo.",
+        psychology: "La mente se disipa en abstracciones, culpas del pasado y miedos del futuro. El cuerpo, en cambio, habita estrictamente en el único momento real: el presente.",
+        action: "Elige una acción automática de tu rutina (lavarte las manos, abrir una puerta o beber agua) y ejecútala sintiendo con total nitidez cada micro-sensación física durante 30 segundos."
+      },
+      {
+        id: "sn-22-59",
+        canon: "Saṁyutta Nikāya",
+        ref: "Anattalakkhaṇa Sutta (SN 22.59)",
+        category: "vacuidad",
+        pali: "netaṁ mama, nesohamasmi, na meso attā",
+        phonetic: "netam mama, nesohamasmi, na meso attaa",
+        translation: "«Esto no es mío, esto no soy yo, esto no es mi propio yo.»",
+        psychology: "Los pensamientos, emociones y opiniones van y vienen como nubes en el cielo. Identificarte con cada estado anímico como si fuera tu identidad fija es la raíz de todo sufrimiento innecesario.",
+        action: "Cuando te invada una preocupación recurrente, obsérvala como quien mira pasar un tren y di mentalmente: «Esto es un pensamiento que ocurre; no es quién soy yo»."
+      },
+      {
+        id: "hr-1",
+        canon: "Prajñāpāramitā",
+        ref: "Sūtra del Corazón",
+        category: "vacuidad",
+        pali: "rūpaṁ śūnyatā śūnyataiva rūpam",
+        phonetic: "ruupam shuunyataa shuunyataiva ruupam",
+        translation: "La forma es vacuidad, la vacuidad misma es forma.",
+        psychology: "Nada en este universo tiene una existencia estática, aislada e inmutable. Al soltar la pretensión de aferrarte a lo efímero, descubres la inmensidad espaciosa de la mente no condicionada.",
+        action: "Observa un objeto cercano. Reconoce que cambiará, envejecerá y se disolverá. Aprecia su presencia en este instante precisamente por su naturaleza pasajera."
+      },
+      {
+        id: "metta-sutta",
+        canon: "Sutta Nipāta",
+        ref: "Mettā Sutta (Sn 1.8)",
+        category: "amor",
+        pali: "sabbe sattā bhavantu sukhitattā",
+        phonetic: "sabbe sattaa bhavantu sukhitattaa",
+        translation: "«Que todos los seres vivos, sin excepción alguna, tengan un corazón colmado de dicha y bienestar.»",
+        psychology: "La mente contraída en el egocentrismo percibe a los demás como amenazas o rivales. La benevolencia incondicional (*Mettā*) expande la consciencia y disuelve la soledad existencial.",
+        action: "Mira a un desconocido hoy (en la calle, metro o supermercado) y sin que lo note, deséale sinceramente: «Que estés libre de miedo, que encuentres paz y salud»."
+      },
+      {
+        id: "dhp-103",
+        canon: "Khuddaka Nikāya",
+        ref: "Dhammapada 103",
+        category: "mente",
+        pali: "yo sahassaṁ sahassena saṅgāme mānuse jine, ekañca jeyyamattānaṁ sa ve saṅgāmajuttamo",
+        phonetic: "yo sahassam sahassena sang-gaame maanuse jine, ekancha jeyyamattaanam sa ve sang-gaamajuttamo",
+        translation: "Aunque uno conquistara en batalla mil veces a mil hombres, quien se conquista a sí mismo es el más excelso de los vencedores.",
+        psychology: "El verdadero triunfo no consiste en imponer tu voluntad sobre el mundo exterior, sino en dejar de ser esclavo de tus propias compulsiones y reacciones impulsivas.",
+        action: "Renuncia voluntariamente hoy a tener la última palabra en una discusión intrascendente. Permite que el otro gane el argumento y observa la serenidad que surge al soltar al ego."
+      },
+      {
+        id: "an-3-65",
+        canon: "Aṅguttara Nikāya",
+        ref: "Kālāma Sutta (AN 3.65)",
+        category: "libertad",
+        pali: "mā anussavena, mā paramparāya... attanāva jāneyyātha",
+        phonetic: "maa anussavena, maa paramparaaya... attano-va jaaneyyaatha",
+        translation: "No creáis por tradición ni por autoridad... cuando vosotros mismos sepáis por experiencia directa que algo conduce a la paz, ponedlo en práctica.",
+        psychology: "La verdadera sabiduría no es dogma ciego, sino verificación empírica. Examina con honestidad si tus hábitos mentales te producen contracción o libertad interior.",
+        action: "Pon a prueba una creencia autolimitante hoy: no la creas sin más. Cuestiónala a través de tu experiencia directa y lúcida."
+      }
+    ];
+
+    /* =====================================================================
+       ESTADO Y PERSISTENCIA (LOCALSTORAGE)
+       ===================================================================== */
+    const STORAGE_KEY_JOURNAL = 'sutta_bowl_entries_v1';
+    const STORAGE_KEY_STREAK = 'sutta_practice_streak_v1';
+    const STORAGE_KEY_ACTIVE = 'sutta_active_id_v1';
+    const STORAGE_KEY_THEME = 'sutta_theme_v1';
+
+    let currentSutta = SUTTAS_DATA[0];
+    let bowlEntries = [];
+    let practiceStreak = { count: 0, lastDate: null };
+    let currentFilterCat = 'all';
+
+    function initApp() {
+      // Tema Oscuro / Claro
+      const savedTheme = localStorage.getItem(STORAGE_KEY_THEME);
+      if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+        updateThemeIcon(true);
+      } else {
+        document.documentElement.classList.remove('dark');
+        updateThemeIcon(false);
+      }
+
+      // Racha
+      const savedStreak = localStorage.getItem(STORAGE_KEY_STREAK);
+      if (savedStreak) {
+        try { practiceStreak = JSON.parse(savedStreak); } catch(e) { console.error(e); }
+      }
+      updateStreakDisplay();
+
+      // Cuenco / Diario
+      const savedBowl = localStorage.getItem(STORAGE_KEY_JOURNAL);
+      if (savedBowl) {
+        try { bowlEntries = JSON.parse(savedBowl); } catch(e) { bowlEntries = []; }
+      }
+      renderJournal();
+
+      // Sutta Activo
+      const savedId = localStorage.getItem(STORAGE_KEY_ACTIVE);
+      if (savedId) {
+        const found = SUTTAS_DATA.find(s => s.id === savedId);
+        if (found) currentSutta = found;
+      } else {
+        const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+        currentSutta = SUTTAS_DATA[dayOfYear % SUTTAS_DATA.length];
+      }
+
+      renderCurrentSutta();
+      renderSuttasGrid();
+
+      // Fecha en diario
+      const now = new Date();
+      document.getElementById('journal-today-date').textContent = now.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' });
+    }
+
+    /* =====================================================================
+       NAVEGACIÓN ENTRE PESTAÑAS
+       ===================================================================== */
+    function switchTab(tabId) {
+      document.querySelectorAll('.view-content').forEach(v => v.classList.add('hidden'));
+      const targetView = document.getElementById(`view-${tabId}`);
+      if (targetView) targetView.classList.remove('hidden');
+
+      // Botones navegación desktop
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.classList.remove('text-amberZen-600', 'dark:text-amberZen-400', 'font-bold', 'bg-linen-100', 'dark:bg-sumi-850');
+        btn.classList.add('text-sumi-800/70', 'dark:text-linen-300');
+      });
+      const activeNav = document.getElementById(`nav-${tabId}`);
+      if (activeNav) {
+        activeNav.classList.add('text-amberZen-600', 'dark:text-amberZen-400', 'font-bold', 'bg-linen-100', 'dark:bg-sumi-850');
+        activeNav.classList.remove('text-sumi-800/70', 'dark:text-linen-300');
+      }
+
+      // Botones móvil
+      document.querySelectorAll('[id^="mob-nav-"]').forEach(btn => {
+        btn.classList.remove('bg-linen-200', 'dark:bg-sumi-850', 'text-amberZen-600', 'dark:text-amberZen-400');
+      });
+      const mobBtn = document.getElementById(`mob-nav-${tabId}`);
+      if (mobBtn) {
+        mobBtn.classList.add('bg-linen-200', 'dark:bg-sumi-850', 'text-amberZen-600', 'dark:text-amberZen-400');
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    /* =====================================================================
+       TEMA OSCURO / CLARO
+       ===================================================================== */
+    function toggleDarkMode() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem(STORAGE_KEY_THEME, isDark ? 'dark' : 'light');
+      updateThemeIcon(isDark);
+      showToast(isDark ? 'Modo noche: Recogimiento y silencio interior' : 'Modo luz: Claridad de la atención plena');
+    }
+
+    function updateThemeIcon(isDark) {
+      const icon = document.getElementById('theme-icon');
+      if (isDark) {
+        icon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />`;
+      } else {
+        icon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>`;
+      }
+    }
+
+    /* =====================================================================
+       NOTIFICACIONES TOAST (SIN ALERTS)
+       ===================================================================== */
+    let toastTimeout;
+    function showToast(msg, icon = '☸️') {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-msg').textContent = msg;
+      document.getElementById('toast-icon').textContent = icon;
+
+      toast.classList.remove('opacity-0', 'translate-y-20', 'pointer-events-none');
+      toast.classList.add('opacity-100', 'translate-y-0');
+
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-20', 'pointer-events-none');
+        toast.classList.remove('opacity-100', 'translate-y-0');
+      }, 3500);
+    }
+
+    /* =====================================================================
+       SUTTA VIVO (PRÁCTICA DEL DÍA)
+       ===================================================================== */
+    function renderCurrentSutta() {
+      document.getElementById('daily-sutta-ref').textContent = currentSutta.ref;
+      document.getElementById('daily-sutta-canon').textContent = currentSutta.canon;
+      document.getElementById('daily-sutta-pali').textContent = currentSutta.pali;
+      document.getElementById('daily-sutta-phonetic').textContent = `[ ${currentSutta.phonetic} ]`;
+      document.getElementById('daily-sutta-translation').textContent = `«${currentSutta.translation}»`;
+      document.getElementById('daily-sutta-psychology').textContent = currentSutta.psychology;
+      document.getElementById('daily-sutta-action').textContent = currentSutta.action;
+
+      localStorage.setItem(STORAGE_KEY_ACTIVE, currentSutta.id);
+      checkIfLivedToday();
+    }
+
+    function pickRandomSutta() {
+      const others = SUTTAS_DATA.filter(s => s.id !== currentSutta.id);
+      currentSutta = others[Math.floor(Math.random() * others.length)];
+      renderCurrentSutta();
+      showToast(`Nuevo sutta evocado: ${currentSutta.ref}`);
+    }
+
+    function setActiveSuttaById(id) {
+      const found = SUTTAS_DATA.find(s => s.id === id);
+      if (found) {
+        currentSutta = found;
+        renderCurrentSutta();
+        switchTab('daily');
+        showToast(`Sutta fijado para el día: ${currentSutta.ref}`);
+      }
+    }
+
+    function checkIfLivedToday() {
+      const today = new Date().toISOString().split('T')[0];
+      const isLived = practiceStreak.lastDate === today;
+      const btn = document.getElementById('btn-mark-lived');
+      const txt = document.getElementById('btn-lived-text');
+
+      if (isLived) {
+        btn.classList.remove('bg-bamboo-700', 'hover:bg-bamboo-800');
+        btn.classList.add('bg-amberZen-600', 'hover:bg-amberZen-700');
+        txt.textContent = 'Encarnado hoy con atención ✓';
+      } else {
+        btn.classList.add('bg-bamboo-700', 'hover:bg-bamboo-800');
+        btn.classList.remove('bg-amberZen-600', 'hover:bg-amberZen-700');
+        txt.textContent = 'Encarnar esta práctica hoy';
+      }
+    }
+
+    function markLivedToday() {
+      const today = new Date().toISOString().split('T')[0];
+      if (practiceStreak.lastDate === today) {
+        showToast('Ya has sellado tu práctica de hoy con presencia.', '🪷');
+        return;
+      }
+
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const yesterdayStr = yesterday.toISOString().split('T')[0];
+
+      if (practiceStreak.lastDate === yesterdayStr) {
+        practiceStreak.count += 1;
+      } else {
+        practiceStreak.count = 1;
+      }
+
+      practiceStreak.lastDate = today;
+      localStorage.setItem(STORAGE_KEY_STREAK, JSON.stringify(practiceStreak));
+
+      updateStreakDisplay();
+      checkIfLivedToday();
+      ringZenBell(432);
+      showToast('Práctica registrada. Que la atención consciente guíe tus actos.', '🙏');
+    }
+
+    function updateStreakDisplay() {
+      const el = document.getElementById('streak-counter');
+      const c = practiceStreak.count || 0;
+      el.textContent = `${c} ${c === 1 ? 'día' : 'días'}`;
+    }
+
+    function shareSuttaText() {
+      const txt = `*${currentSutta.ref}*\n"${currentSutta.pali}"\n\nTraducción:\n${currentSutta.translation}\n\nMicro-Práctica del Día:\n${currentSutta.action}\n\n— SUTTA · El Sendero Vivo`;
+      copySafe(txt);
+      showToast('Enseñanza copiada al portapapeles.', '📋');
+    }
+
+    function copySafe(str) {
+      const el = document.createElement('textarea');
+      el.value = str;
+      el.style.position = 'fixed';
+      el.style.left = '-9999px';
+      document.body.appendChild(el);
+      el.select();
+      try { document.execCommand('copy'); } catch(e) { console.error(e); }
+      document.body.removeChild(el);
+    }
+
+    /* =====================================================================
+       LABORATORIO SATIPAṬṬHĀNA (LAS 4 BASES DE LA ATENCIÓN)
+       ===================================================================== */
+    let currentSatiStep = 1;
+    let selectedVedana = '';
+    let selectedCitta = '';
+
+    function setSatiStep(step) {
+      currentSatiStep = step;
+      for (let i = 1; i <= 4; i++) {
+        const el = document.getElementById(`sati-step-${i}`);
+        const tab = document.getElementById(`sati-tab-${i}`);
+        if (el) el.classList.toggle('hidden', i !== step);
+        if (tab) {
+          if (i === step) {
+            tab.className = "py-2 text-xs font-bold uppercase tracking-wider border-b-2 border-bamboo-600 text-bamboo-700 dark:text-bamboo-300";
+          } else {
+            tab.className = "py-2 text-xs font-bold uppercase tracking-wider text-sumi-800/50 dark:text-linen-400";
+          }
+        }
+      }
+
+      if (step === 4) {
+        updateSatiSummary();
+      }
+    }
+
+    function selectVedana(type) {
+      selectedVedana = type;
+      const feedback = document.getElementById('vedana-feedback');
+      if (type.includes('Sukha')) {
+        feedback.textContent = "Vedanā Agradable detectada: Observa el impulso sutil de aferrarte o querer que no termine.";
+      } else if (type.includes('Dukkha')) {
+        feedback.textContent = "Vedanā Desagradable detectada: Observa la tensión de querer escapar o rechazar la experiencia.";
+      } else {
+        feedback.textContent = "Vedanā Neutra detectada: Observa si la mente se aburre o se distrae en busca de estímulo.";
+      }
+    }
+
+    function selectCittaState(state) {
+      selectedCitta = state;
+      document.getElementById('citta-selection-display').textContent = `Estado reconocido: ${state}`;
+    }
+
+    function updateSatiSummary() {
+      const kaya = document.getElementById('sati-input-kaya').value.trim() || "Cuerpo respirando";
+      const vedana = selectedVedana || "Sensación atestiguada";
+      const citta = selectedCitta || "Mente observada";
+
+      document.getElementById('sati-final-summary').innerHTML = `
+        <strong>Cuerpo (Kāya):</strong> ${escapeHtml(kaya)}<br>
+        <strong>Sensación (Vedanā):</strong> ${escapeHtml(vedana)}<br>
+        <strong>Estado (Citta):</strong> ${escapeHtml(citta)}<br><br>
+        <em>Comprensión Dhamma:</em> Nada de esto te pertenece. Es un proceso de causas y condiciones que surge y cesa. Al soltarlo, descansas en Suññatā (la vacuidad fértil).
+      `;
+    }
+
+    function saveSatipatthanaToJournal() {
+      const kaya = document.getElementById('sati-input-kaya').value.trim() || "Presencia en el cuerpo";
+      const entry = {
+        id: Date.now().toString(),
+        date: new Date().toISOString(),
+        situation: `Satipaṭṭhāna: ${kaya}`,
+        seal: "Anattā (No soy este contenido mental)",
+        attachment: `Apego/Rechazo observado: ${selectedVedana || 'Neutro'} con estado ${selectedCitta || 'Mente en calma'}`,
+        insight: "He observado los 4 fundamentos sin alimentar la reactividad. Todo surge y cesa por sí mismo.",
+        suttaRef: "Satipaṭṭhāna Sutta (MN 10)"
+      };
+
+      bowlEntries.unshift(entry);
+      localStorage.setItem(STORAGE_KEY_JOURNAL, JSON.stringify(bowlEntries));
+      renderJournal();
+      ringZenBell(528);
+      showToast('Observación de Satipaṭṭhāna entregada a la Vacuidad.', '🕊️');
+      
+      // Reiniciar
+      document.getElementById('sati-input-kaya').value = '';
+      setSatiStep(1);
+      switchTab('journal');
+    }
+
+    /* =====================================================================
+       METTĀ BHĀVANĀ (AMOR BENEVOLENTE Y COMPASIÓN RADICAL)
+       ===================================================================== */
+    const METTA_STAGES = [
+      {
+        title: "Fase 1: Cultivar bondad hacia ti mismo",
+        instruction: "No puedes ofrecer una paz que no te permitas recibir. Reconoce tu anhelo innato de estar a salvo y en paz.",
+        symbol: "🪷",
+        phrases: [
+          "«Que esté libre de peligros internos y externos.»",
+          "«Que mi cuerpo tenga salud y mi mente serenidad.»",
+          "«Que pueda vivir con facilidad y bondad hacia mis límites.»"
+        ]
+      },
+      {
+        title: "Fase 2: Irradiar hacia un ser querido o benefactor",
+        instruction: "Trae a tu mente a alguien por quien sientas gratitud natural o un amigo entrañable. Deséale el bien sin esfuerzo.",
+        symbol: "🌿",
+        phrases: [
+          "«Que tu corazón esté colmado de alegría y descanso.»",
+          "«Que estés protegido del sufrimiento innecesario.»",
+          "«Que encuentres satisfacción en cada paso de tu sendero.»"
+        ]
+      },
+      {
+        title: "Fase 3: Irradiar hacia una persona neutra",
+        instruction: "Piensa en alguien que ves con frecuencia pero que apenas conoces (el cajero, el vecino, un transeúnte). Siente su humanidad idéntica a la tuya.",
+        symbol: "🍃",
+        phrases: [
+          "«Al igual que yo, tú también deseas no sufrir.»",
+          "«Que tus cargas cotidianas sean ligeras.»",
+          "«Que reine la armonía en tu hogar y en tu mente.»"
+        ]
+      },
+      {
+        title: "Fase 4: Irradiar hacia una persona difícil o en conflicto",
+        instruction: "Sin justificar conductas dañinas, comprende que quien daña actúa desde su propia herida o ignorancia (Avidyā). Suelta el veneno del rencor.",
+        symbol: "🕊️",
+        phrases: [
+          "«Que te liberes de la confusión que te empuja al dolor.»",
+          "«Que cese la hostilidad en tu pecho.»",
+          "«Que ambos encontremos claridad y reconciliación.»"
+        ]
+      },
+      {
+        title: "Fase 5: Irradiar hacia todos los seres en todas direcciones",
+        instruction: "Extiende tu corazón hacia el norte, sur, este y oeste, hacia arriba y hacia abajo, abrazando a todo ser sintiente sin excepción.",
+        symbol: "🌍",
+        phrases: [
+          "«Que todos los seres en el aire, tierra y agua vivan en paz.»",
+          "«Que los afligidos hallen consuelo y los cautivos libertad.»",
+          "«Sabbe sattā sukhi hontu — ¡Que todos los seres sean felices!»"
+        ]
+      }
+    ];
+
+    let currentMettaIndex = 0;
+
+    function setMettaStage(idx) {
+      currentMettaIndex = Math.max(0, Math.min(METTA_STAGES.length - 1, idx));
+      const stage = METTA_STAGES[currentMettaIndex];
+
+      document.getElementById('metta-stage-title').textContent = stage.title;
+      document.getElementById('metta-stage-instruction').textContent = stage.instruction;
+      document.getElementById('metta-target-symbol').textContent = stage.symbol;
+      
+      const phrasesContainer = document.getElementById('metta-phrases');
+      phrasesContainer.innerHTML = stage.phrases.map(p => `<p>${escapeHtml(p)}</p>`).join('');
+
+      for (let i = 0; i < 5; i++) {
+        const btn = document.getElementById(`metta-stage-${i}`);
+        if (i === currentMettaIndex) {
+          btn.className = "metta-btn px-3 py-1 rounded-full border border-amberZen-500 bg-amberZen-500 text-white font-bold";
+        } else {
+          btn.className = "metta-btn px-3 py-1 rounded-full border border-linen-300 dark:border-sumi-700 text-sumi-800/70 dark:text-linen-300";
+        }
+      }
+    }
+
+    function nextMettaStage() {
+      if (currentMettaIndex < METTA_STAGES.length - 1) {
+        setMettaStage(currentMettaIndex + 1);
+        ringZenBell(440);
+      }
+    }
+
+    function prevMettaStage() {
+      if (currentMettaIndex > 0) {
+        setMettaStage(currentMettaIndex - 1);
+      }
+    }
+
+    /* =====================================================================
+       RESPIRADOR ĀNĀPĀNASATI Y SÍNTESIS DE SONIDO ZEN (WEB AUDIO API)
+       ===================================================================== */
+    let anapanaInterval = null;
+    let isAnapanaActive = false;
+    let anapanaMode = 'samatha';
+    let anapanaCycleCount = 0;
+    let audioZenEnabled = true;
+
+    // Configuración de patrones: in, hold, out, hold2 (en segundos)
+    const ANAPANA_CONFIGS = {
+      samatha: { in: 4, hold1: 4, out: 6, hold2: 2, name: "Samatha" },
+      vipassana: { in: 5, hold1: 1, out: 5, hold2: 1, name: "Vipassanā Fluida" },
+      peace: { in: 4, hold1: 7, out: 8, hold2: 0, name: "Paz 4-7-8" }
+    };
+
+    function setAnapanaMode(mode) {
+      if (isAnapanaActive) toggleAnapanaSession();
+      anapanaMode = mode;
+
+      const btnSam = document.getElementById('anapana-btn-samatha');
+      const btnVip = document.getElementById('anapana-btn-vipassana');
+      const btnPea = document.getElementById('anapana-btn-peace');
+
+      [btnSam, btnVip, btnPea].forEach(b => {
+        b.className = "px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider border border-linen-300 dark:border-sumi-700 text-sumi-800/70 dark:text-linen-400 hover:bg-linen-100";
+      });
+
+      if (mode === 'samatha') {
+        btnSam.className = "px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider border border-bamboo-600 bg-bamboo-100/50 dark:bg-bamboo-900/30 text-bamboo-800 dark:text-bamboo-200";
+      } else if (mode === 'vipassana') {
+        btnVip.className = "px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider border border-bamboo-600 bg-bamboo-100/50 dark:bg-bamboo-900/30 text-bamboo-800 dark:text-bamboo-200";
+      } else {
+        btnPea.className = "px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider border border-bamboo-600 bg-bamboo-100/50 dark:bg-bamboo-900/30 text-bamboo-800 dark:text-bamboo-200";
+      }
+    }
+
+    function toggleAnapanaSession() {
+      const btn = document.getElementById('anapana-start-btn');
+      if (isAnapanaActive) {
+        clearInterval(anapanaInterval);
+        isAnapanaActive = false;
+        btn.textContent = 'Iniciar Práctica';
+        btn.classList.remove('bg-vermilion-600', 'text-white');
+        btn.classList.add('bg-sumi-900', 'text-linen-100', 'dark:bg-linen-100', 'dark:text-sumi-950');
+        resetAnapanaVisuals();
+      } else {
+        isAnapanaActive = true;
+        btn.textContent = 'Detener / Reposar';
+        btn.classList.add('bg-vermilion-600', 'text-white');
+        btn.classList.remove('bg-sumi-900', 'dark:bg-linen-100');
+        startAnapanaLoop();
+      }
+    }
+
+    function resetAnapanaVisuals() {
+      const orb = document.getElementById('anapana-orb');
+      orb.style.transform = 'scale(1)';
+      document.getElementById('anapana-phase-text').textContent = 'Presente';
+      document.getElementById('anapana-instruction').textContent = 'Pulsa Iniciar para armonizar';
+      document.getElementById('anapana-counter').textContent = '0';
+    }
+
+    function startAnapanaLoop() {
+      const cfg = ANAPANA_CONFIGS[anapanaMode];
+      const cycleTotal = cfg.in + cfg.hold1 + cfg.out + cfg.hold2;
+      let tick = 0;
+
+      ringZenBell(396);
+
+      const runStep = () => {
+        const sec = tick % cycleTotal;
+        const orb = document.getElementById('anapana-orb');
+        const phaseTxt = document.getElementById('anapana-phase-text');
+        const instr = document.getElementById('anapana-instruction');
+        const count = document.getElementById('anapana-counter');
+
+        if (sec < cfg.in) {
+          // Inhalación
+          const p = sec + 1;
+          phaseTxt.textContent = "Inhala";
+          instr.textContent = "«Al inhalar largo, discierno que inhalo largo»";
+          count.textContent = p;
+          orb.style.transition = `transform ${cfg.in}s cubic-bezier(0.4, 0, 0.2, 1)`;
+          orb.style.transform = 'scale(1.55)';
+          if (sec === 0) ringZenBell(528);
+        } else if (sec < cfg.in + cfg.hold1) {
+          // Retención lleno
+          const p = (sec - cfg.in) + 1;
+          phaseTxt.textContent = "Sostén";
+          instr.textContent = "Experimentando el cuerpo entero en quietud";
+          count.textContent = p;
+          orb.style.transition = 'transform 0.5s ease';
+          orb.style.transform = 'scale(1.55)';
+        } else if (sec < cfg.in + cfg.hold1 + cfg.out) {
+          // Exhalación
+          const p = (sec - cfg.in - cfg.hold1) + 1;
+          phaseTxt.textContent = "Exhala";
+          instr.textContent = "«Aquietando la formación corporal, exhalo»";
+          count.textContent = p;
+          orb.style.transition = `transform ${cfg.out}s cubic-bezier(0.4, 0, 0.2, 1)`;
+          orb.style.transform = 'scale(0.85)';
+          if (sec === cfg.in + cfg.hold1) ringZenBell(396);
+        } else {
+          // Vacío
+          const p = (sec - cfg.in - cfg.hold1 - cfg.out) + 1;
+          phaseTxt.textContent = "Vacío";
+          instr.textContent = "Descanso en la vacuidad luminosa del Ser";
+          count.textContent = p;
+          orb.style.transition = 'transform 0.5s ease';
+          orb.style.transform = 'scale(0.85)';
+        }
+
+        tick++;
+        if (tick % cycleTotal === 0) {
+          anapanaCycleCount++;
+          document.getElementById('anapana-cycles').textContent = `Ciclos conscientes: ${anapanaCycleCount}`;
+        }
+      };
+
+      runStep();
+      anapanaInterval = setInterval(runStep, 1000);
+    }
+
+    /* =====================================================================
+       SÍNTESIS DE CAMPANA ZEN / CUENCO TIBETANO (WEB AUDIO API PURA)
+       ===================================================================== */
+    let audioCtx = null;
+
+    function initAudio() {
+      if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContext();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function toggleAudioMute() {
+      audioZenEnabled = !audioZenEnabled;
+      document.getElementById('audio-zen-icon').textContent = audioZenEnabled ? '🔔' : '🔕';
+      showToast(audioZenEnabled ? 'Campana Zen activada' : 'Campana silenciada');
+    }
+
+    function ringZenBell(fundamental = 440) {
+      if (!audioZenEnabled) return;
+      try {
+        initAudio();
+        const now = audioCtx.currentTime;
+
+        // Frecuencias armónicas resonantes de cuenco japonés Rīn
+        const harmonics = [
+          { f: fundamental * 1.0, g: 0.35, d: 5.5 },
+          { f: fundamental * 2.76, g: 0.16, d: 3.8 },
+          { f: fundamental * 5.42, g: 0.08, d: 2.1 }
+        ];
+
+        harmonics.forEach(h => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(h.f, now);
+          // Leve desafinación analógica natural
+          osc.frequency.linearRampToValueAtTime(h.f + 0.3, now + h.d);
+
+          gain.gain.setValueAtTime(0, now);
+          gain.gain.linearRampToValueAtTime(h.g, now + 0.03);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + h.d);
+
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+
+          osc.start(now);
+          osc.stop(now + h.d);
+        });
+      } catch(e) {
+        console.warn('Audio no iniciado aún:', e);
+      }
+    }
+
+    /* =====================================================================
+       DIARIO DEL TESTIGO Y CUENCO VACÍO (SUÑÑATĀ)
+       ===================================================================== */
+    function saveEmptyBowlEntry() {
+      const situation = document.getElementById('empty-situation').value.trim();
+      const attachment = document.getElementById('empty-attachment').value.trim();
+      const insight = document.getElementById('empty-insight').value.trim();
+      const seal = document.getElementById('empty-seal').value;
+
+      if (!situation && !attachment && !insight) {
+        showToast('Escribe al menos una observación o apego a soltar.', '⚠️');
+        return;
+      }
+
+      const entry = {
+        id: Date.now().toString(),
+        date: new Date().toISOString(),
+        situation: situation || 'Observación cotidiana',
+        seal: seal,
+        attachment: attachment || 'Suelto la expectativa y el control',
+        insight: insight || 'Descanso en la vacuidad y ecuanimidad.',
+        suttaRef: currentSutta ? currentSutta.ref : ''
+      };
+
+      bowlEntries.unshift(entry);
+      localStorage.setItem(STORAGE_KEY_JOURNAL, JSON.stringify(bowlEntries));
+
+      document.getElementById('empty-situation').value = '';
+      document.getElementById('empty-attachment').value = '';
+      document.getElementById('empty-insight').value = '';
+
+      renderJournal();
+      ringZenBell(432);
+      showToast('Ofrenda depositada en el cuenco vacío.', '🥣');
+    }
+
+    function renderJournal() {
+      const container = document.getElementById('journal-list');
+      const search = (document.getElementById('journal-filter-input')?.value || '').toLowerCase();
+
+      const filtered = bowlEntries.filter(e => {
+        return (
+          e.situation.toLowerCase().includes(search) ||
+          e.attachment.toLowerCase().includes(search) ||
+          e.insight.toLowerCase().includes(search) ||
+          e.seal.toLowerCase().includes(search)
+        );
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-12 border border-dashed border-linen-200 dark:border-sumi-800 rounded-3xl p-8">
+            <div class="text-3xl mb-2 text-sumi-800/40">🥣</div>
+            <h4 class="font-serif text-lg font-bold">El Cuenco está Vacío y Libre</h4>
+            <p class="text-xs text-sumi-800/60 dark:text-linen-400 max-w-sm mx-auto mt-1">
+              Aquí quedarán registradas tus desidentificaciones y actos de entrega lúcida.
+            </p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(item => {
+        const d = new Date(item.date);
+        const dateStr = d.toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+        return `
+          <div class="bg-white dark:bg-sumi-900 border border-linen-200 dark:border-sumi-800 rounded-2xl p-5 shadow-sm space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-linen-100 dark:border-sumi-800 pb-2">
+              <div class="flex items-center space-x-2">
+                <span class="text-xs px-2.5 py-0.5 rounded-full bg-linen-100 dark:bg-sumi-850 text-bamboo-800 dark:text-bamboo-200 font-semibold">${escapeHtml(item.seal)}</span>
+                ${item.suttaRef ? `<span class="text-[11px] font-mono text-amberZen-600 dark:text-amberZen-400">${escapeHtml(item.suttaRef)}</span>` : ''}
+              </div>
+              <div class="flex items-center space-x-2 text-xs text-sumi-800/40 dark:text-linen-500">
+                <span>${dateStr}</span>
+                <button onclick="deleteBowlEntry('${item.id}')" class="hover:text-vermilion-500 p-1" title="Retirar">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="text-sm font-semibold text-sumi-900 dark:text-linen-100">
+              <span class="text-xs uppercase tracking-wider text-sumi-800/50 dark:text-linen-400 block font-normal">Situación:</span>
+              ${escapeHtml(item.situation)}
+            </div>
+
+            <div class="text-xs text-vermilion-700 dark:text-vermilion-400 bg-vermilion-50/50 dark:bg-vermilion-950/20 p-3 rounded-xl border border-vermilion-200/50 dark:border-vermilion-900/40">
+              <span class="font-bold block mb-0.5">Apego o tensión vaciada:</span>
+              ${escapeHtml(item.attachment)}
+            </div>
+
+            <div class="text-xs text-bamboo-800 dark:text-bamboo-200 bg-bamboo-50/70 dark:bg-bamboo-950/30 p-3 rounded-xl border border-bamboo-200/60 dark:border-bamboo-900/40">
+              <span class="font-bold block mb-0.5">Espacio de Sabiduría (*Paññā*):</span>
+              ${escapeHtml(item.insight)}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function deleteBowlEntry(id) {
+      bowlEntries = bowlEntries.filter(e => e.id !== id);
+      localStorage.setItem(STORAGE_KEY_JOURNAL, JSON.stringify(bowlEntries));
+      renderJournal();
+      showToast('Entrada retirada del cuenco.');
+    }
+
+    function exportBowlJSON() {
+      if (bowlEntries.length === 0) {
+        showToast('El cuenco está vacío, nada que exportar.', 'ℹ️');
+        return;
+      }
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(bowlEntries, null, 2));
+      const dl = document.createElement('a');
+      dl.setAttribute("href", dataStr);
+      dl.setAttribute("download", `sutta_cuenco_vacio_${new Date().toISOString().split('T')[0]}.json`);
+      document.body.appendChild(dl);
+      dl.click();
+      dl.remove();
+      showToast('Archivo JSON descargado.', '💾');
+    }
+
+    function exportBowlTXT() {
+      if (bowlEntries.length === 0) {
+        showToast('El cuenco está vacío, nada que exportar.', 'ℹ️');
+        return;
+      }
+      let content = "=========================================================\n";
+      content += "  SUTTA · EL CUENCO VACÍO (SUÑÑATĀ Y ATENCIÓN PLENA)\n";
+      content += "=========================================================\n\n";
+
+      bowlEntries.forEach((e, idx) => {
+        content += `[Entrada ${idx + 1}] — ${new Date(e.date).toLocaleString()}\n`;
+        content += `Sello: ${e.seal}\n`;
+        if (e.suttaRef) content += `Referencia: ${e.suttaRef}\n`;
+        content += `Situación: ${e.situation}\n`;
+        content += `Apego vaciado: ${e.attachment}\n`;
+        content += `Discernimiento: ${e.insight}\n`;
+        content += "---------------------------------------------------------\n\n";
+      });
+
+      const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const dl = document.createElement('a');
+      dl.href = url;
+      dl.download = `sutta_cuenco_vacio_${new Date().toISOString().split('T')[0]}.txt`;
+      document.body.appendChild(dl);
+      dl.click();
+      document.body.removeChild(dl);
+      URL.revokeObjectURL(url);
+      showToast('Texto descargado.', '📄');
+    }
+
+    /* =====================================================================
+       BIBLIOTECA Y COMPENDIO DE SUTTAS
+       ===================================================================== */
+    function filterSuttas(cat) {
+      currentFilterCat = cat;
+      document.querySelectorAll('.sutta-cat-btn').forEach(btn => {
+        if (btn.getAttribute('data-category') === cat) {
+          btn.className = "sutta-cat-btn px-3 py-1.5 rounded-full text-xs font-semibold border border-linen-300 dark:border-sumi-700 bg-sumi-900 text-white dark:bg-linen-100 dark:text-sumi-950";
+        } else {
+          btn.className = "sutta-cat-btn px-3 py-1.5 rounded-full text-xs font-semibold border border-linen-300 dark:border-sumi-700 text-sumi-800/70 dark:text-linen-400 hover:bg-linen-100";
+        }
+      });
+      renderSuttasGrid();
+    }
+
+    function searchSuttas() {
+      renderSuttasGrid();
+    }
+
+    function renderSuttasGrid() {
+      const container = document.getElementById('suttas-grid');
+      const search = (document.getElementById('sutta-search-input')?.value || '').toLowerCase();
+
+      const filtered = SUTTAS_DATA.filter(s => {
+        const matchesCat = currentFilterCat === 'all' || s.category === currentFilterCat;
+        const matchesQuery = s.ref.toLowerCase().includes(search) ||
+                             s.pali.toLowerCase().includes(search) ||
+                             s.translation.toLowerCase().includes(search) ||
+                             s.psychology.toLowerCase().includes(search) ||
+                             s.action.toLowerCase().includes(search);
+        return matchesCat && matchesQuery;
+      });
+
+      container.innerHTML = filtered.map(s => {
+        return `
+          <div class="bg-white dark:bg-sumi-900 border border-linen-200 dark:border-sumi-800 rounded-3xl p-6 shadow-sm hover:border-amberZen-500/50 flex flex-col justify-between space-y-4">
+            <div class="space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="px-2.5 py-0.5 rounded-md font-mono text-xs font-bold bg-linen-100 dark:bg-sumi-850 text-bamboo-800 dark:text-bamboo-200">
+                  ${escapeHtml(s.ref)}
+                </span>
+                <span class="text-[11px] uppercase tracking-wider font-semibold text-sumi-800/50 dark:text-linen-400">
+                  ${escapeHtml(s.canon)}
+                </span>
+              </div>
+
+              <h3 class="font-serif text-lg font-bold text-sumi-900 dark:text-linen-100 italic">
+                ${escapeHtml(s.pali)}
+              </h3>
+              <p class="text-xs text-amberZen-600 dark:text-amberZen-400 font-medium">
+                «${escapeHtml(s.translation)}»
+              </p>
+              <p class="text-xs text-sumi-800/70 dark:text-linen-300 leading-relaxed pt-1">
+                ${escapeHtml(s.psychology)}
+              </p>
+            </div>
+
+            <div class="pt-3 border-t border-linen-100 dark:border-sumi-800 flex items-center justify-between gap-2">
+              <div class="text-[11px] text-bamboo-800 dark:text-bamboo-300 font-medium truncate flex-1">
+                🌱 <strong>Encarnación:</strong> ${escapeHtml(s.action)}
+              </div>
+              <button onclick="setActiveSuttaById('${s.id}')" class="px-3 py-1.5 rounded-xl bg-linen-100 dark:bg-sumi-850 hover:bg-amberZen-500 hover:text-white dark:hover:bg-amberZen-500 text-xs font-semibold whitespace-nowrap transition">
+                Vivir hoy
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    /* =====================================================================
+       MODAL DE NOTA RÁPIDA
+       ===================================================================== */
+    function openNoteModal() {
+      document.getElementById('modal-sutta-ref-text').textContent = `Inspirado en ${currentSutta.ref}: "${currentSutta.translation}"`;
+      document.getElementById('modal-note-text').value = '';
+      document.getElementById('modal-note').classList.remove('hidden');
+    }
+
+    function closeNoteModal() {
+      document.getElementById('modal-note').classList.add('hidden');
+    }
+
+    function saveModalNote() {
+      const val = document.getElementById('modal-note-text').value.trim();
+      if (!val) {
+        showToast('Escribe unas palabras para tu ofrenda.', '⚠️');
+        return;
+      }
+
+      const entry = {
+        id: Date.now().toString(),
+        date: new Date().toISOString(),
+        situation: `Contemplación: ${currentSutta.ref}`,
+        seal: "Upekkhā (Ecuanimidad radiante)",
+        attachment: "Suelto la agitación conceptual",
+        insight: val,
+        suttaRef: currentSutta.ref
+      };
+
+      bowlEntries.unshift(entry);
+      localStorage.setItem(STORAGE_KEY_JOURNAL, JSON.stringify(bowlEntries));
+      renderJournal();
+      closeNoteModal();
+      ringZenBell(432);
+      showToast('Ofrenda guardada en el cuenco.', '🪷');
+    }
+
+    /* =====================================================================
+       UTILIDADES
+       ===================================================================== */
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initApp();
+    });
+  </script>
+</body>
+</html>
